@@ -6,7 +6,7 @@ const pool = new Pool({
   "user":"Vernon",
   "password":"",
   "database":"ecommerce_project",
-  "max":25,
+  "max":30,
   "connectionTimeoutMillis": 0,
   "idleTimeoutMillis":0
 
@@ -136,7 +136,60 @@ const deleteAddress = (request,response) => {
       else{
         response.status(200).send(`address deleted with id: ${id}`);
       }
-  });
+  })
+};
+
+const getCreditCards = (request,response) => {
+  pool.query('SELECT * from credit_cards ORDER BY id ASC', (error,results) =>{
+    if(error)
+      throw error
+    else 
+      response.status(200).json(results.rows);
+  })
+};
+
+const getCreditCardsById = (request,response) => {
+  const id = parseInt(request.params.id);
+  pool.query('SELECT * from credit_cards WHERE id =$1', [id], (error,results)=>{
+    if(error)
+      throw error
+    else
+      response.status(200).json(results.rows);
+  })
+};
+
+const createCreditCard = (request,response) => {
+  const {customer_id,card_number,card_type,cvc_number,expiration_date} = request.body;
+  pool.query('INSERT INTO credit_cards (customer_id,card_number,card_type,cvc_number,expiration_date) VALUES ($1,$2,$3,$4,$5)',
+  [customer_id,card_number,card_type,cvc_number,expiration_date], (error,results) => {
+    if(error)
+      throw error
+    else
+      response.status(201).send('credit card created for customer id: ' + customer_id);
+  })
+};
+
+const updateCreditCard = (request,response) => {
+  const id = parseInt(request.params.id);
+  const {customer_id,card_number,card_type,cvc_number,expiration_date} = request.body;
+  pool.query('UPDATE credit_cards SET customer_id = $2, card_number = $3, card_type = $4, cvc_number = $5,expiration_date = $6 WHERE id = $1',
+  [id,customer_id,card_number,card_type,cvc_number,expiration_date], (error,results)=> {
+    if (error)
+      throw error
+    else
+      response.status(200).send('credit card updated with id: ' + id);
+  })
+}
+
+const deleteCreditCard = (request,response) => {
+  const id = parseInt(request.params.id);
+  pool.query('DELETE FROM credit_cards WHERE id = $1',[id], (error,results) =>{
+    if(error){
+      throw error
+    }
+    else
+      response.status(200).send('credit card deleted with id: ' + id);
+  })
 }
 
 module.exports = {
@@ -149,7 +202,12 @@ module.exports = {
   getAddressById,
   createAddress,
   updateAddress,
-  deleteAddress
+  deleteAddress,
+  getCreditCards,
+  getCreditCardsById,
+  createCreditCard,
+  updateCreditCard,
+  deleteCreditCard
 }
 
 //connecting with client

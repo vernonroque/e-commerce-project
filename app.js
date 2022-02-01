@@ -28,6 +28,12 @@ app.post('/billing_address', db.createAddress)
 app.put('/billing_address/:id', db.updateAddress)
 app.delete('/billing_address/:id', db.deleteAddress)
 
+app.get('/credit_cards', db.getCreditCards)
+app.get('/credit_cards/:id',db.getCreditCardsById)
+app.post('/credit_cards', db.createCreditCard)
+app.put('/credit_cards/:id', db.updateCreditCard)
+app.delete('/credit_cards/:id',db.deleteCreditCard)
+
 
 app.get('/', (req, res) => {
   res.send('Andre 3000!')

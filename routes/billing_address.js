@@ -14,7 +14,6 @@ const {
 
 addressRouter.get('/billing_address', (req,res,next) => {
     const allAddresses = getAddresses();
-    console.log('all addresses', allAddresses);
     res.status(200).send(allAddresses);
 }); 
 
@@ -33,7 +32,7 @@ addressRouter.post('/', (req,res,next) => {
   const newAddress = req.body;
   const createdNewAddress = createAddress(newAddress);
     if(createdNewAddress){
-      res.status(200).send(createdNewAddress);
+      res.status(201).send(createdNewAddress);
     }
     else{
       res.status(404).send();

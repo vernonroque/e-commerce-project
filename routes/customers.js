@@ -14,7 +14,6 @@ const {
 
 customersRouter.get('/', (req,res,next) => {
     const allCustomers = getCustomers();
-    console.log('all addresses', allCustomers);
     res.status(200).send(allCustomers);
   });
 

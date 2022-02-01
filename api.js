@@ -9,6 +9,8 @@ apiRouter.use('/customers',customersRouter);
 const addressRouter = require('./routes/billing_address');
 apiRouter.use('/billing_address', addressRouter);
 
+const cardRouter = require('./routes/credit_cards');
+apiRouter.use('/credit_cards',cardRouter);
 
 
 
