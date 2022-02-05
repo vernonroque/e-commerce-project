@@ -34,6 +34,21 @@ app.post('/credit_cards', db.createCreditCard)
 app.put('/credit_cards/:id', db.updateCreditCard)
 app.delete('/credit_cards/:id',db.deleteCreditCard)
 
+app.get('/items', db.getItems)
+app.get('/items/:id', db.getItemById)
+app.post('/items', db.createItem)
+app.put('/items/:id',db.updateItem)
+app.delete('/items/:id',db.deleteItem)
+
+app.get('/orders',db.getOrders)
+app.get('/orders/:id',db.getOrderById)
+app.post('/orders',db.createOrder)
+app.put('/orders/:id',db.updateOrder)
+app.delete('/orders/:id',db.deleteOrder)
+
+app.get('/shopping_cart', db.shopping_cart)
+
+
 
 app.get('/', (req, res) => {
   res.send('Andre 3000!')

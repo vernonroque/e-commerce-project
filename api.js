@@ -12,6 +12,11 @@ apiRouter.use('/billing_address', addressRouter);
 const cardRouter = require('./routes/credit_cards');
 apiRouter.use('/credit_cards',cardRouter);
 
+const orderRouter = require('./routes/orders');
+apiRouter.use('/orders',orderRouter);
+
+const shopCartRouter = require('./routes/shopping_cart')
+apiRouter.use('/shopping_cart',shopCartRouter);
 
 
 
