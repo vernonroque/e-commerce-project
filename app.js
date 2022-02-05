@@ -46,7 +46,11 @@ app.post('/orders',db.createOrder)
 app.put('/orders/:id',db.updateOrder)
 app.delete('/orders/:id',db.deleteOrder)
 
-app.get('/shopping_cart', db.shopping_cart)
+app.get('/shopping_cart', db.getShopCart)
+app.get('/shopping_cart/:id', db.getShopCartById)
+app.post('/shopping_cart',db.createShopCart)
+app.put('/shopping_cart/:id',db.updateShopCart)
+app.delete('/shopping_cart/:id',db.deleteShopCart)
 
 
 

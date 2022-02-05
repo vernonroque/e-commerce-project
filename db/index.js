@@ -289,13 +289,65 @@ const updateOrder = (request,response) => {
 
 const deleteOrder = (request,response) => {
 const id = parseInt(request.params.id);
-pool.query('DELETE from orders WHERE id = $1',[id],(error,results)=>{
+pool.query('DELETE FROM orders WHERE id = $1',[id],(error,results)=>{
   if(error)
     throw error;
   else
     response.status(200).send(`order deleted with id: ${id}`);
   })
 };
+
+const getShopCart = (request,response) => {
+  pool.query('SELECT * FROM shopping_cart',(error,results) => {
+    if(error)
+      throw error;
+    else
+      response.status(200).json(results.rows);
+  })
+};
+
+const getShopCartById = (request,response) => {
+  const id = parseInt(request.params.id);
+  pool.query('SELECT * FROM shopping_cart WHERE order_id = $1', [id], (error,results) =>{
+    if (error)
+      throw error;
+    else
+      response.status(200).json(results.rows);
+  })
+};
+
+const createShopCart = (request,response) => {
+  const {order_id,item_id,quantity} = request.body;
+  pool.query('INSERT into shopping_cart (order_id,item_id,quantity) VALUES($1,$2,$3)',
+  [order_id,item_id,quantity],(error,results)=>{
+    if(error)
+      throw error;
+    else
+      response.status(200).send(`shopping cart created with order id: ${order_id}`)
+  })
+}
+
+const updateShopCart = (request,response) => {
+const id = parseInt(request.params.id)
+const {order_id,item_id,quantity} = request.body
+pool.query(`UPDATE shopping_cart SET item_id=$2,quantity=$3 WHERE order_id = ${id}`,
+[order_id,item_id,quantity],(error,results) => {
+  if (error)
+   throw error;
+  else
+    response.status(200).send('updated order with id: ' + order_id);
+  })
+}
+const deleteShopCart = (request,response) => {
+  const id = parseInt(request.params.id);
+  pool.query('DELETE FROM shopping_cart WHERE order_id =$1',[id],(error,results) => {
+    if(error)
+      throw error
+    else
+    response.status(200).send('order deleted with id: ' + id);
+  })
+}
+
 
 module.exports = {
   getCustomers,
@@ -322,7 +374,12 @@ module.exports = {
   getOrderById,
   createOrder,
   updateOrder,
-  deleteOrder
+  deleteOrder,
+  getShopCart,
+  getShopCartById,
+  createShopCart,
+  updateShopCart,
+  deleteShopCart
 }
 
 //connecting with client
