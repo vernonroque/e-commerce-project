@@ -1,4 +1,5 @@
-const { Pool, Client } = require('pg')
+const { Pool, Client } = require('pg');
+const bcrypt = require("bcrypt");
 
 const pool = new Pool({
   "host": "localhost",
@@ -6,10 +7,9 @@ const pool = new Pool({
   "user":"Vernon",
   "password":"",
   "database":"ecommerce_project",
-  "max":30,
+  "max":40,
   "connectionTimeoutMillis": 0,
   "idleTimeoutMillis":0
-
 })
 
 // pool.query(`Select * from billing_address`,(err,res) => {
@@ -21,6 +21,11 @@ const pool = new Pool({
 //     console.log(err.message)
 //   }
 // });
+
+const registerCustomer = (request, response) => {
+  const {first_name,last_name,email_address,password} =request.body;
+
+}
 
 const getCustomers = (request, response) => {
   pool.query('SELECT * FROM customers ORDER BY id ASC', (error, results) => {
@@ -42,23 +47,36 @@ const getCustomerById = (request, response) => {
   })
 };
 
-const createCustomer = (request, response) => {
-  const {first_name, last_name, email_address, password } = request.body
-  pool.query('INSERT INTO customers (first_name,last_name,email_address,password) VALUES ($1,$2, $3, $4)', 
-  [first_name,last_name,email_address,password], (error, results) => {
+const createCustomer = async(request, response) => {
+  let {first_name, last_name, email_address, password, password_2 } = request.body;
+
+  if(password === password_2){
+    let hashedPassword = await bcrypt.hash(password,10);
+    password = hashedPassword;
+    password_2 = hashedPassword;
+  }
+  
+  pool.query('INSERT INTO customers (first_name,last_name,email_address,password,password_2) VALUES ($1,$2, $3, $4, $5)', 
+  [first_name,last_name,email_address,password,password_2], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(201).send(`Customer added with name: ${first_name}`)
+    response.status(201).send(`Customer added with hashed password: ${password}`)
   })
 }
 
-const updateCustomer = (request, response) => {
+const updateCustomer = async (request, response) => {
   const id = parseInt(request.params.id)
-  const {first_name,last_name, email_address,password } = request.body
+  let {first_name,last_name, email_address,password, password_2 } = request.body
+
+  if(password === password_2){
+    let hashedPassword = await bcrypt.hash(password,10);
+    password = hashedPassword;
+    password_2 = hashedPassword;
+  }
   pool.query(
-    `UPDATE customers SET first_name = $2, last_name = $3, email_address = $4, password = $5 WHERE id = $1`,
-    [id,first_name,last_name,email_address,password],
+    `UPDATE customers SET first_name = $2, last_name = $3, email_address = $4, password = $5, password_2 = $6 WHERE id = $1`,
+    [id,first_name,last_name,email_address,password, password_2],
     (error, results) => {
       if (error) {
         throw error
@@ -350,6 +368,7 @@ const deleteShopCart = (request,response) => {
 
 
 module.exports = {
+  pool,
   getCustomers,
   getCustomerById,
   createCustomer,
@@ -379,7 +398,8 @@ module.exports = {
   getShopCartById,
   createShopCart,
   updateShopCart,
-  deleteShopCart
+  deleteShopCart,
+  registerCustomer
 }
 
 //connecting with client

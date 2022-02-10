@@ -18,6 +18,9 @@ apiRouter.use('/orders',orderRouter);
 const shopCartRouter = require('./routes/shopping_cart')
 apiRouter.use('/shopping_cart',shopCartRouter);
 
+const registerRouter = require('./routes/register')
+apiRouter.use('/customers/register',registerRouter)
+
 
 
 // const ideasRouter = require('./ideas');

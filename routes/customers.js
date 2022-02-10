@@ -1,6 +1,7 @@
 const express = require('express');
 const customersRouter = express.Router();
 const bodyParser = require('body-parser');
+const bcrypt = require("bcrypt");
 
 customersRouter.use(bodyParser.json());
 
@@ -11,6 +12,7 @@ const {
   updateCustomer,
   deleteCustomer
 } = require('../db/index');
+
 
 customersRouter.get('/', (req,res,next) => {
     const allCustomers = getCustomers();
@@ -28,16 +30,17 @@ customersRouter.get('/:customerId', (req,res,next) => {
     }
   });
 
-customersRouter.post('/', (req,res,next) => {
+  customersRouter.post('/register', async(req,res,next) => {
     const newCustomer = req.body;
     const addedNewCustomer = createCustomer(newCustomer);
       if(addedNewCustomer){
-        res.status(201).send(addedNewCustomer);
+        res.status(201).send('Added new customer',addedNewCustomer);
       }
       else{
         res.status(404).send();
       }
   });
+
 
   customersRouter.put('/:customerId', (req,res,next) => {
     const newCustomerData = req.body;

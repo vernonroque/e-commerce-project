@@ -18,7 +18,7 @@ app.use('/api',apiRouter);
 
 app.get('/customers', db.getCustomers)
 app.get('/customers/:id', db.getCustomerById)
-app.post('/customers', db.createCustomer)
+app.post('/customers/register', db.createCustomer)
 app.put('/customers/:id', db.updateCustomer)
 app.delete('/customers/:id', db.deleteCustomer)
 
@@ -51,6 +51,8 @@ app.get('/shopping_cart/:id', db.getShopCartById)
 app.post('/shopping_cart',db.createShopCart)
 app.put('/shopping_cart/:id',db.updateShopCart)
 app.delete('/shopping_cart/:id',db.deleteShopCart)
+
+//app.post('/customers/register',db.registerCustomer)
 
 
 
